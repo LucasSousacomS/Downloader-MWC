@@ -14,8 +14,10 @@ def searchIndex(path):
     except:
         print("Erro")
     nextIndex = 1
+    
     for files in os.listdir(path):
-        if(files[5:-4] == '' or files[0:5] != "track"):
+        print(files[-4:])
+        if(files[5:-4] == '' or files[0:5] != "track" or files[-4:] != ".ogg"):
             continue
         nbr.append(int(files[5:-4]))
         
@@ -41,7 +43,8 @@ cmdyt = [
     "yt-dlp",
     # "-h"
     "-x",
-    # "--audio-format vorbis",
+    "--audio-format",
+    "vorbis",
     "-o",
     audioPath,
     "https://www.youtube.com/watch?v=TCd6PfxOy0Y"
@@ -52,4 +55,4 @@ cmdffm = [
     "-h"
 ]
 
-# subprocess.run(cmdyt, check=True)
+subprocess.run(cmdyt, check=True)
