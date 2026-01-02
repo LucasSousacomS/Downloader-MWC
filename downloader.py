@@ -9,8 +9,9 @@ def searchIndex(path):
     used = set()
     try:
         os.listdir(path)
-    except:
-        print("Erro")
+    except OSError:
+        print("Error acessing the radio file. Make sure the file exists. It should look like xxx\zzz\My Winter Car\Radio or xxx\zzz\My Summer Car\Radio")
+        return None
     nextIndex = 1
     
     for files in os.listdir(path):
@@ -65,7 +66,7 @@ def downloadAndConv(path, link):
 def main():    
     mwcPath = r'I:\SteamLibrary\steamapps\common\My Winter Car\Radio'
     if(mwcPath[-6:] != '/Radio'):
-        print("The radio folder must be something like xxx\zzz\My Winter Car\Radio")
+        print("The radio folder must be something like xxx\zzz\My Winter Car\Radio or xxx\zzz\My Summer Car\Radio")
     ytLink = 'https://www.youtube.com/watch?v=TCd6PfxOy0Y'
     downloadAndConv(mwcPath, ytLink)
 
