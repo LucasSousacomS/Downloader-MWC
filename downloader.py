@@ -58,10 +58,9 @@ def downloadAndConv(path, link):
     subprocess.run(cmdyt, check=True)
 
 def main():    
-    mwcPath = 'I:\SteamLibrary\steamapps\common\My Winter Car\Radio'
-    if(mwcPath[-6:] != '/Radio'){
+    mwcPath = r'I:\SteamLibrary\steamapps\common\My Winter Car\Radio'
+    if(mwcPath[-6:] != '/Radio'):
         print("The radio folder must be something like xxx\zzz\My Winter Car\Radio")
-    }
     ytLink = 'https://www.youtube.com/watch?v=TCd6PfxOy0Y'
     downloadAndConv(mwcPath, ytLink)
 
