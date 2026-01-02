@@ -7,6 +7,7 @@ import subprocess
 
 def searchIndex(path):
     nbr = []
+    used = set()
     try:
         os.listdir(path)
     except:
@@ -15,24 +16,29 @@ def searchIndex(path):
     
     for files in os.listdir(path):
         print(files[-4:])
-        if(files[5:-4] == '' or files[0:5] != "track" or files[-4:] != ".ogg"):
+        if(files[5:-4] == '' or files[0:5] != "track" or files[-4:] != ".ogg" or not files[5:-4].isdigit):
             continue
         nbr.append(int(files[5:-4]))
+
+    for i in range(1, 201):
+        if i not in used:
+            return i
+    return None
         
-    nbr.sort()
+    # nbr.sort()
     #print(nbr)
 
-    for i in nbr:
-        print (f'i = {i}, nextIndex = {nextIndex}')
-        if (nextIndex < i):     
-            return nextIndex
-        nextIndex = i + 1
-    return nextIndex
+    # for i in nbr:
+    #     print (f'i = {i}, nextIndex = {nextIndex}')
+    #     if (nextIndex < i):     
+    #         return nextIndex
+    #     nextIndex = i + 1
+    # return nextIndex
 
 def downloadAndConv(path, link):
     index = str(searchIndex(path))
 
-    if index > 200:
+    if index == None:
         print ("You can't have more than 200 songs on the radio")
         return
 
@@ -45,6 +51,7 @@ def downloadAndConv(path, link):
         "-x",
         "--audio-format",
         "vorbis",
+        "--embed-metadata",
         "-o",
         audioPath,
         link
