@@ -3,7 +3,28 @@ import subprocess
 
 #print(os.listdir('I:\SteamLibrary\steamapps\common\My Winter Car\Radio'))
 
-MAX_TRACKS = 200
+MODES = {
+    "radio": {
+        "path": r"I:\SteamLibrary\steamapps\common\My Winter Car\Radio",
+        "max_tracks": 200  
+    },
+    "cd1": {
+        "path": r"I:\SteamLibrary\steamapps\common\My Winter Car\CD1",
+        "max_tracks": 15
+    },
+    "cd2": {
+        "path": r"I:\SteamLibrary\steamapps\common\My Winter Car\CD2",
+        "max_tracks": 15
+    },
+    "cd3": {
+        "path": r"I:\SteamLibrary\steamapps\common\My Winter Car\CD3",
+        "max_tracks": 15
+    }
+}
+
+mode = "radio"
+
+MAX_TRACKS = MODES[mode]["max_tracks"]
 
 def searchIndex(path):
     used = set()
@@ -64,7 +85,7 @@ def downloadAndConv(path, link):
         print("Error downloading or converting audio")
 
 def main():    
-    mwcPath = r'I:\SteamLibrary\steamapps\common\My Winter Car\Radio'
+    mwcPath = MODES[mode]["path"]
     if(mwcPath[-6:] != '/Radio'):
         print("The radio folder must be something like xxx\zzz\My Winter Car\Radio or xxx\zzz\My Summer Car\Radio")
     ytLink = 'https://www.youtube.com/watch?v=TCd6PfxOy0Y'
