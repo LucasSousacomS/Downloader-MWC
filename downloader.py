@@ -3,12 +3,10 @@ import subprocess
 
 #print(os.listdir('I:\SteamLibrary\steamapps\common\My Winter Car\Radio'))
 
-nbr = []
 
-
-mwcPath = 'I:\SteamLibrary\steamapps\common\My Winter Car\Radio'
 
 def searchIndex(path):
+    nbr = []
     try:
         os.listdir(path)
     except:
@@ -31,28 +29,41 @@ def searchIndex(path):
         nextIndex = i + 1
     return nextIndex
 
-trackName = "track" + str(searchIndex(mwcPath))
+def downloadAndConv(path, link):
+    index = str(searchIndex(path))
 
-print(f'Resultado da função: {searchIndex(mwcPath)}')
+    if index > 200:
+        print ("You can't have more than 200 songs on the radio")
+        return
 
+    trackName = "track" + index
 
-audioPath = os.path.join(mwcPath, trackName)
-# print(audioPath)
+    audioPath = os.path.join(path, trackName)
 
-cmdyt = [
-    "yt-dlp",
-    # "-h"
-    "-x",
-    "--audio-format",
-    "vorbis",
-    "-o",
-    audioPath,
-    "https://www.youtube.com/watch?v=TCd6PfxOy0Y"
-]
+    cmdyt = [
+        "yt-dlp",
+        "-x",
+        "--audio-format",
+        "vorbis",
+        "-o",
+        audioPath,
+        link
+    ]
 
-cmdffm = [
-    "ffmpeg",
-    "-h"
-]
+    cmdffm = [
+        "ffmpeg",
+        "-h"
+    ]
 
-subprocess.run(cmdyt, check=True)
+    subprocess.run(cmdyt, check=True)
+
+def main():    
+    mwcPath = 'I:\SteamLibrary\steamapps\common\My Winter Car\Radio'
+    if(mwcPath[-6:] != '/Radio'){
+        print("The radio folder must be something like xxx\zzz\My Winter Car\Radio")
+    }
+    ytLink = 'https://www.youtube.com/watch?v=TCd6PfxOy0Y'
+    downloadAndConv(mwcPath, ytLink)
+
+if __name__ == "__main__":
+    main()
