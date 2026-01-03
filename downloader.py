@@ -95,11 +95,12 @@ def main():
     root.title("My Summer Car Downloader")
     root.geometry("700x450")
 
-    
     root.grid_columnconfigure(0, weight=1)
     root.grid_rowconfigure(3, weight=1)
 
-    
+    # =====================
+    # FRAME TÍTULO
+    # =====================
     frame_title = tk.Frame(root)
     frame_title.grid(row=0, column=0, sticky="ew", pady=5)
 
@@ -110,11 +111,13 @@ def main():
     )
     title_label.pack()
 
-    
+    # =====================
+    # FRAME MENU
+    # =====================
     frame_menu = tk.Frame(root, relief="groove", bd=2)
     frame_menu.grid(row=1, column=0, sticky="ew", padx=10, pady=5)
 
-    mode = tk.StringVar(value="radio")
+    mode_var = tk.StringVar(value="radio")
 
     options = [("Radio", "radio"), ("CD1", "cd1"), ("CD2", "cd2"), ("CD3", "cd3")]
 
@@ -122,32 +125,33 @@ def main():
         rb = tk.Radiobutton(
             frame_menu,
             text=text,
-            variable=mode,
+            variable=mode_var,
             value=value
         )
         rb.grid(row=0, column=i, padx=20)
 
-    
+    # =====================
+    # FRAME CONTROLES
+    # =====================
     frame_controls = tk.Frame(root)
     frame_controls.grid(row=2, column=0, sticky="ew", padx=10, pady=5)
 
     frame_controls.grid_columnconfigure(1, weight=1)
 
-    
-    tk.Label(frame_controls, text="Pasta:").grid(row=0, column=0, sticky="w", pady=2)
+    tk.Label(frame_controls, text="Folder:").grid(row=0, column=0, sticky="w")
     entry_folder = tk.Entry(frame_controls)
     entry_folder.grid(row=0, column=1, sticky="ew", padx=5)
 
-    
-    tk.Label(frame_controls, text="Link:").grid(row=1, column=0, sticky="w", pady=2)
+    tk.Label(frame_controls, text="Link:").grid(row=1, column=0, sticky="w")
     entry_link = tk.Entry(frame_controls)
     entry_link.grid(row=1, column=1, sticky="ew", padx=5)
 
-    
     btn_download = tk.Button(frame_controls, text="Download", width=12)
     btn_download.grid(row=0, column=2, rowspan=2, padx=10, sticky="ns")
 
-    
+    # =====================
+    # FRAME LOG
+    # =====================
     frame_log = tk.Frame(root, relief="sunken", bd=2)
     frame_log.grid(row=3, column=0, sticky="nsew", padx=10, pady=5)
 
@@ -159,20 +163,50 @@ def main():
 
     scrollbar = tk.Scrollbar(frame_log, command=text_log.yview)
     scrollbar.grid(row=0, column=1, sticky="ns")
-
     text_log.config(yscrollcommand=scrollbar.set)
 
     # =====================
+    # FUNÇÕES DA UI
+    # =====================
+    def log(msg):
+        text_log.insert(tk.END, msg + "\n")
+        text_log.see(tk.END)
+        root.update_idletasks()
+
+    def on_download_clicked():
+        selected_mode = mode_var.get()
+        link = entry_link.get().strip()
+
+        if not link:
+            log("❌ No link provided.")
+            return
+
+        # Pasta: usa a do modo se Entry estiver vazia
+        if entry_folder.get().strip():
+            path = entry_folder.get().strip()
+        else:
+            path = MODES[selected_mode]["path"]
+
+        global MAX_TRACKS
+        MAX_TRACKS = MODES[selected_mode]["max_tracks"]
+
+        log(f"Mode: {selected_mode}")
+        log(f"Path: {path}")
+        log("Starting download...")
+
+        btn_download.config(state="disabled")
+
+        try:
+            downloadAndConv(path, link)
+            log("✔ Download finished.")
+        except Exception as e:
+            log(f"❌ Error: {e}")
+
+        btn_download.config(state="normal")
+
+    # LIGA O BOTÃO À FUNÇÃO
+    btn_download.config(command=on_download_clicked)
+
     root.mainloop()
 
-   
-    # mwcPath = MODES[mode]["path"]
-    # if(mwcPath[-6:] != '/Radio'):
-    #     print("The radio folder must be something like xxx\zzz\My Winter Car\Radio or xxx\zzz\My Summer Car\Radio")
-    # ytLink = 'https://www.youtube.com/watch?v=TCd6PfxOy0Y'
-    # downloadAndConv(mwcPath, ytLink)
-
-
-if __name__ == "__main__":
-    main()
-
+main()
